@@ -1,9 +1,9 @@
 {
-    "family": "nginx",
+    "family": "PostCodeECSService",
     "networkMode": "awsvpc",
     "containerDefinitions": [
         {
-            "name": "nginx",
+            "name": "PostCodeECSService",
             "image": "<IMAGE>",
             "portMappings": [
                 {
@@ -20,5 +20,5 @@
     ],
     "cpu": "256",
     "memory": "512",
-    "executionRoleArn": "arn:aws:iam::174304792831:role/ECSTaskExecutionRole"
+    "executionRoleArn": "arn:aws:iam::844268948863:role/vpc-ECSTaskExecutionRole-96KJ0X58GPC0"
 }

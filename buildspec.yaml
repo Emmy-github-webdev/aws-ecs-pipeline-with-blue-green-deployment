@@ -1,9 +1,9 @@
 version: 0.2 
  
-env:
-  secrets-manager:
-    DOCKERHUB_USERNAME: dockerhub:username
-    DOCKERHUB_PASSWORD: dockerhub:password
+# env:
+#   secrets-manager:
+#     DOCKERHUB_USERNAME: dockerhub:username
+#     DOCKERHUB_PASSWORD: dockerhub:password
  
 phases: 
   install:
@@ -13,23 +13,25 @@ phases:
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
       - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
 
-  pre_build: 
-    commands: 
-    - echo Logging in to Docker Hub.... 
-    - docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - echo $AWS_DEFAULT_REGION
+      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 844268948863.dkr.ecr.us-east-2.amazonaws.com
 
   build: 
     commands: 
     - echo Build started on `date` 
     - echo Building the Docker image... 
-    - docker build --rm -t patrick888/postcode:latest .
+    - docker build --rm -t 844268948863.dkr.ecr.us-east-2.amazonaws.com/postcode:latest .
 
   post_build: 
     commands: 
     - echo Build completed on `date` 
     - echo pushing to repo
-    - docker push patrick888/postcode:latest
-    - printf '{"ImageURI":"patrick888/postcode:latest"}' > imageDetail.json
+    - docker push 844268948863.dkr.ecr.us-east-2.amazonaws.com/postcode:latest
+    - printf '{"ImageURI":"844268948863.dkr.ecr.us-east-2.amazonaws.com/postcode:latest"}' > imageDetail.json
 
 artifacts:
   files:
